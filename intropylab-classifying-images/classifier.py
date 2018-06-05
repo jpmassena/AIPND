@@ -4,6 +4,11 @@ import torchvision.transforms as transforms
 from torch.autograd import Variable
 import torchvision.models as models
 from torch import __version__
+import os
+
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
 
 resnet18 = models.resnet18(pretrained=True)
 alexnet = models.alexnet(pretrained=True)
