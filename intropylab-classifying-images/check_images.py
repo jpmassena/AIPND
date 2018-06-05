@@ -134,7 +134,7 @@ def get_pet_labels():
                  classified by pretrained CNN models (string)
     Returns:
      petlabels_dic - Dictionary storing image filename (as key) and Pet Image
-                     Labels (as value)  
+                     Labels (as value)
     """
     pass
 
@@ -148,7 +148,7 @@ def classify_images():
      classifier.py within this function. The proper use of this function is
      in test_classifier.py Please refer to this program prior to using the
      classifier() function to classify images in this function.
-     Parameters: 
+     Parameters:
       images_dir - The (full) path to the folder of images that are to be
                    classified by pretrained CNN models (string)
       petlabel_dic - Dictionary that contains the pet image(true) labels
