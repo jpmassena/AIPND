@@ -38,11 +38,12 @@ def main():
     # collecting start time
     start_time = time()
 
-    sleep(62)
-
-    # TODO: 2. Define get_input_args() function to create & retrieve command
+    # DONE: 2. Define get_input_args() function to create & retrieve command
     # line arguments
     in_arg = get_input_args()
+
+    # prints the arguments values
+    check_command_line_arguments(in_arg)
 
     # TODO: 3. Define get_pet_labels() function to create pet image labels by
     # creating a dictionary with key=filename and value=file label to be used
@@ -90,19 +91,36 @@ def get_input_args():
     Retrieves and parses the command line arguments created and defined using
     the argparse module. This function returns these arguments as an
     ArgumentParser object.
-     3 command line arguements are created:
+     3 command line arguments are created:
        dir - Path to the pet image files(default- 'pet_images/')
        arch - CNN model architecture to use for image classification(default-
               pick any of the following vgg, alexnet, resnet)
        dogfile - Text file that contains all labels associated to dogs(default-
                 'dognames.txt'
     Parameters:
-     None - simply using argparse module to create & store command line 
+     None - simply using argparse module to create & store command line
      arguments
     Returns:
      parse_args() -data structure that stores the command line arguments object
     """
-    pass
+
+    # creates the arguments parser
+    parser = argparse.ArgumentParser()
+
+    # creates the 3 command line arguments. one for the images folder, one for
+    # the CNN architecture and one for the file with dog names
+    parser.add_argument('--dir', type=str, default='pet_images/',
+                        help='Path to the folder pet_images')
+    parser.add_argument('--arch', type=str, default='alexnet',
+                        help='CNN model architecture to use')
+    parser.add_argument('--dogfile', type=str, default='dognames.txt',
+                        help='File with valid dognames')
+
+    # assigns variable parsed_args to parse_args()
+    parsed_args = parser.parse_args()
+
+    # returns the args structure to the caller
+    return parsed_args
 
 
 def get_pet_labels():
