@@ -21,7 +21,7 @@
 
 # Imports python modules
 import argparse
-from time import time, sleep
+from time import time
 from os import listdir
 
 # Imports classifier function for using CNN to classify images
@@ -45,10 +45,13 @@ def main():
     # prints the arguments values
     check_command_line_arguments(in_arg)
 
-    # TODO: 3. Define get_pet_labels() function to create pet image labels by
+    # DONE: 3. Define get_pet_labels() function to create pet image labels by
     # creating a dictionary with key=filename and value=file label to be used
     # to check the accuracy of the classifier function
-    answers_dic = get_pet_labels()
+    answers_dic = get_pet_labels(in_arg.dir)
+
+    # prints first 10 key-value pairs and the size of the dictionary
+    check_creating_pet_image_labels(answers_dic)
 
     # TODO: 4. Define classify_images() function to create the classifier
     # labels with the classifier function uisng in_arg.arch, comparing the
@@ -123,7 +126,7 @@ def get_input_args():
     return parsed_args
 
 
-def get_pet_labels():
+def get_pet_labels(image_dir):
     """
     Creates a dictionary of pet labels based upon the filenames of the image
     files. Reads in pet filenames and extracts the pet image labels from the
@@ -136,7 +139,33 @@ def get_pet_labels():
      petlabels_dic - Dictionary storing image filename (as key) and Pet Image
                      Labels (as value)
     """
-    pass
+    filename_list = listdir(image_dir)  # files in the pet folder
+
+    # define the dictionary with filenamne as keys and labels as values
+    petlabels_dic = {f: f[0:f.rfind('_')].lower().replace('_', ' ').strip()
+                     for f in filename_list if f[0] != '.'}
+    # or
+    """
+    petlabels_dic = {}
+    for pet_file in filename_list:
+
+        if(pet_file[0] != '.'):  # if it's not a hidden file (mac/linux)
+            pet_name = pet_file.lower()  # change it to all lower case
+            pet_name_words = pet_name.split('_')  # get all individual words
+            pet_label = ""
+
+            for pet_word in pet_name_words:
+                if pet_word.isalpha():  # if word only has letters
+                    pet_label += pet_word + ' '  # add word to the label
+
+            pet_label = pet_label.strip()  # remove spaces from the start/end
+
+            if pet_file not in petlabels_dic.keys():  # if key is a new one
+                petlabels_dic[pet_file] = pet_label
+            else:  # impossible to have duplicated filenames here...
+                print("Duplicated file found in the directory!")
+    """
+    return petlabels_dic
 
 
 def classify_images():
