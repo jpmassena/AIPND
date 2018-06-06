@@ -53,10 +53,13 @@ def main():
     # prints first 10 key-value pairs and the size of the dictionary
     check_creating_pet_image_labels(answers_dic)
 
-    # TODO: 4. Define classify_images() function to create the classifier
+    # DONE: 4. Define classify_images() function to create the classifier
     # labels with the classifier function uisng in_arg.arch, comparing the
     # labels, and creating a dictionary of results (result_dic)
-    result_dic = classify_images()
+    result_dic = classify_images(in_arg.dir, answers_dic, in_arg.arch)
+
+    # prints matches and no matches of the classification result
+    check_classifying_images(result_dic)
 
     # TODO: 5. Define adjust_results4_isadog() function to adjust the results
     # dictionary(result_dic) to determine if classifier correctly classified
@@ -168,7 +171,7 @@ def get_pet_labels(image_dir):
     return petlabels_dic
 
 
-def classify_images():
+def classify_images(images_dir, petlabel_dic, model):
     """
     Creates classifier labels with classifier function, compares labels, and
     creates a dictionary containing both labels and comparison of them to be
@@ -193,7 +196,30 @@ def classify_images():
                     idx 2 = 1/0 (int)   where 1 = match between pet image and
                     classifer labels and 0 = no match between labels
     """
-    pass
+    results_dic = {}
+
+    for filename in petlabel_dic:
+        classifier_label = classifier(
+            images_dir+filename, model).lower().strip()
+
+        real_label = petlabel_dic[filename]
+
+        found_idx = classifier_label.find(real_label)
+
+        if (classifier_label == real_label) or (
+            classifier_label.startswith(real_label) or (
+                classifier_label[found_idx - 1] == ' ') and (
+                    classifier_label.endswith(real_label) or (
+                        classifier_label[found_idx+len(real_label):found_idx +
+                                         len(real_label)+1] in (',', ' ')))):
+
+            if filename not in results_dic.keys():
+                results_dic[filename] = [real_label, classifier_label, 1]
+
+        elif filename not in results_dic.keys():
+            results_dic[filename] = [real_label, classifier_label, 0]
+
+    return results_dic
 
 
 def adjust_results4_isadog():
