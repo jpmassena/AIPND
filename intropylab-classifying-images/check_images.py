@@ -61,11 +61,14 @@ def main():
     # prints matches and no matches of the classification result
     check_classifying_images(result_dic)
 
-    # TODO: 5. Define adjust_results4_isadog() function to adjust the results
+    # DONE: 5. Define adjust_results4_isadog() function to adjust the results
     # dictionary(result_dic) to determine if classifier correctly classified
     # images as 'a dog' or 'not a dog'. This demonstrates if the model can
     # correctly classify dog images as dogs (regardless of breed)
-    adjust_results4_isadog()
+    adjust_results4_isadog(result_dic, in_arg.dogfile)
+
+    # prints if the labels are of dogs or not
+    check_classifying_labels_as_dogs(result_dic)
 
     # TODO: 6. Define calculates_results_stats() function to calculate
     # results of run and puts statistics in a results statistics
@@ -222,7 +225,7 @@ def classify_images(images_dir, petlabel_dic, model):
     return results_dic
 
 
-def adjust_results4_isadog():
+def adjust_results4_isadog(results_dic, dogsfile):
     """
     Adjusts the results dictionary to determine if classifier correctly
     classified images 'as a dog' or 'not a dog' especially when not a match.
@@ -250,7 +253,26 @@ def adjust_results4_isadog():
     Returns:
            None - results_dic is mutable data type so no return needed.
     """
-    pass
+    dognames_dic = {}
+
+    with open(dogsfile, 'r') as f:
+        line = f.readline()  # read first line
+
+        while line != '':  # while the line to process has text
+            if line not in dognames_dic.keys():
+                # add the new breed if it don't exists
+                dognames_dic[line.rstrip()] = 1
+            else:  # print warning
+                print("Warning: a duplicated line was found!")
+
+            line = f.readline()  # read next line
+
+    for data in results_dic.values():  # for each classified result
+        # add a 1 if the image label is of a dog or 0 if not
+        data.append(1 if data[0] in dognames_dic.keys() else 0)
+
+        # add a 1 if the classifier label is of a dog or 0 if not
+        data.append(1 if data[1] in dognames_dic.keys() else 0)
 
 
 def calculates_results_stats():
