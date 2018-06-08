@@ -73,7 +73,10 @@ def main():
     # TODO: 6. Define calculates_results_stats() function to calculate
     # results of run and puts statistics in a results statistics
     # dictionary (results_stats_dic)
-    results_stats_dic = calculates_results_stats()
+    results_stats_dic = calculates_results_stats(result_dic)
+
+    # print the statistics
+    check_calculating_results(result_dic, results_stats_dic)
 
     # TODO: 7. Define print_results() function to print summary results,
     # incorrect classifications of dogs and breeds if requested.
@@ -275,7 +278,7 @@ def adjust_results4_isadog(results_dic, dogsfile):
         data.append(1 if data[1] in dognames_dic.keys() else 0)
 
 
-def calculates_results_stats():
+def calculates_results_stats(results_dic):
     """
     Calculates statistics of the results of the run using classifier's model
     architecture on classifying images. Then puts the results statistics in a
@@ -299,7 +302,50 @@ def calculates_results_stats():
                      name (starting with 'pct' for percentage or 'n' for count)
                      and the value is the statistic's value
     """
-    pass
+    results_stats = {}
+
+    # calculating required counts
+
+    n_imgs = len(results_dic)  # number of images in the results
+    n_dog_imgs = 0  # number of images of dogs in the results
+    n_correct_dogs = 0  # number of correctly classified dogs
+    n_correct_not_dogs = 0  # number of correctly classified not dogs
+    n_correct_breed = 0  # number of correctly classified breeds of dogs
+
+    for image in results_dic:
+        # [idx_3] = 1 if control label is of a dog and 0 is not
+        n_dog_imgs += results_dic[image][3]
+        if results_dic[image][3] == 1 and results_dic[image][4] == 1:
+            n_correct_dogs += 1
+        elif results_dic[image][3] == 0 and results_dic[image][4] == 0:
+            n_correct_not_dogs += 1
+
+        if results_dic[image][2] == 1 and results_dic[image][3] == 1:
+            n_correct_breed += 1
+
+    # number of images of not-dogs in the results
+    n_not_dog_imgs = n_imgs - n_dog_imgs
+
+    results_stats['n_images'] = n_imgs
+    results_stats['n_dogs_img'] = n_dog_imgs
+    results_stats['n_notdogs_img'] = n_not_dog_imgs
+
+    # calculating required percentages
+
+    if n_dog_imgs > 0:
+        results_stats['pct_correct_dogs'] = n_correct_dogs/n_dog_imgs*100.0
+        results_stats['pct_correct_breed'] = n_correct_breed/n_dog_imgs*100.0
+    else:
+        results_stats['pct_correct_dogs'] = 0
+        results_stats['pct_correct_breed'] = 0
+
+    if n_not_dog_imgs > 0:
+        results_stats['pct_correct_notdogs'] = (
+            n_correct_not_dogs/n_not_dog_imgs*100.0)
+    else:
+        results_stats['pct_correct_notdogs'] = 0
+
+    return results_stats
 
 
 def print_results():
