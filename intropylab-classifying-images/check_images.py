@@ -70,7 +70,7 @@ def main():
     # prints if the labels are of dogs or not
     check_classifying_labels_as_dogs(result_dic)
 
-    # TODO: 6. Define calculates_results_stats() function to calculate
+    # DONE: 6. Define calculates_results_stats() function to calculate
     # results of run and puts statistics in a results statistics
     # dictionary (results_stats_dic)
     results_stats_dic = calculates_results_stats(result_dic)
@@ -78,9 +78,9 @@ def main():
     # print the statistics
     check_calculating_results(result_dic, results_stats_dic)
 
-    # TODO: 7. Define print_results() function to print summary results,
+    # DONE: 7. Define print_results() function to print summary results,
     # incorrect classifications of dogs and breeds if requested.
-    print_results()
+    print_results(result_dic, results_stats_dic, in_arg.arch, True, True)
 
     # DONE: 1. Define end_time to measure total program runtime
     # by collecting end time
@@ -329,6 +329,9 @@ def calculates_results_stats(results_dic):
     results_stats['n_images'] = n_imgs
     results_stats['n_dogs_img'] = n_dog_imgs
     results_stats['n_notdogs_img'] = n_not_dog_imgs
+    results_stats['n_correct_dogs'] = n_correct_dogs
+    results_stats['n_correct_notdogs'] = n_correct_not_dogs
+    results_stats['n_correct_breed'] = n_correct_breed
 
     # calculating required percentages
 
@@ -348,7 +351,8 @@ def calculates_results_stats(results_dic):
     return results_stats
 
 
-def print_results():
+def print_results(results_dic, results_stats, model,
+                  print_incorrect_dogs=False, print_incorrect_breed=False):
     """
     Prints summary results on the classification and then prints incorrectly
     classified dogs and incorrectly classified dog breeds if user indicates
@@ -377,7 +381,42 @@ def print_results():
     Returns:
            None - simply printing results.
     """
-    pass
+
+    print("*** Classification Results for the CNN Model ", model.upper(),
+          "***")
+
+    print("\nNumber of Images: {}".format(results_stats['n_images']))
+    print("Number of Dog Images: {}".format(results_stats['n_dogs_img']))
+    print('Number of "Not-a" Dog Images: {}'.format(
+        results_stats['n_notdogs_img']))
+
+    print("\n% Correct Dogs: {}%".format(results_stats['pct_correct_dogs']))
+    print("% Correct Breed: {}%".format(results_stats['pct_correct_breed']))
+    print('% Correct "Not-a" Dog: {}%'.format(
+        results_stats['pct_correct_notdogs']))
+
+    if print_incorrect_dogs and (
+            (results_stats['n_correct_dogs'] +
+             results_stats['n_correct_notdogs']) !=
+            results_stats['n_images']):
+
+        print("\nIncorrect Dog/Not Dog Classifications:")
+
+        for result in results_dic:
+            if sum(results_dic[result][3:]) == 1:
+                print("Real: %-30s Classifier %-30s" %
+                      (results_dic[result][0], results_dic[result][1]))
+
+    if print_incorrect_breed and (results_stats['n_correct_dogs'] !=
+                                  results_stats['pct_correct_breed']):
+
+        print("\nIncorrect Breeds Classifications:")
+
+        for result in results_dic:
+            if sum(results_dic[result][3:]) == 2 and (
+                    results_dic[result][2] == 0):
+                print("Real: %-30s Classifier %-30s" %
+                      (results_dic[result][0], results_dic[result][1]))
 
 
 def print_pretty_time(total_seconds):
