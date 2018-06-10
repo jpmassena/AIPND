@@ -3,7 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sb
 import os
-
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
@@ -19,7 +18,7 @@ plt.xlim((0, 4))
 plt.clf()
 
 # np.log10(pokemon['weight'].describe())
-bins = 10 ** np.arange(-1, 3+0.1, 0.1)
+bins = 10 ** np.arange(-1, 3+0.1, 0.1)  # 10 ** because of the log10 scale
 ticks = [.1, .3, 1, 3, 10, 30, 100, 300, 1000]
 labels = ['{}'.format(v) for v in ticks]
 plt.hist(data=pokemon, x='weight', bins=bins)
