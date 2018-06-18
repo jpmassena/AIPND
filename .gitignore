@@ -108,3 +108,4 @@ ENV/
 /MNIST_data
 /F_MNIST_data
 /Project/flowers
+/Project/trained_checkpoint.pth
