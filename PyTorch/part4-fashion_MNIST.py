@@ -68,7 +68,11 @@ class Network(nn.Module):
 
         Arguments:
             input -- The network input data
+        
+        Returns:
+            [type] -- [description]
         """
+
         output = input
         # feed through the hidden layers
         for linear_layer in self.layers:
@@ -113,6 +117,7 @@ for epoch in range(EPOCHS):
     running_loss = 0
     for images, targets in trainloader:
         step += 1
+
         # flatten image from 28*28 matrix to 784 vector
         images.resize_(images.size()[0], 784)
 

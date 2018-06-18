@@ -107,3 +107,4 @@ ENV/
 .vscode
 /MNIST_data
 /F_MNIST_data
+/Project/flowers
