@@ -79,7 +79,7 @@ def load_model(checkpoint):
     model.classifier = ClassifierModel(state['input_size'],
                                        state['output_size'],
                                        state['hidden_layers'],
-                                       state['dropout_probability'])
+                                       0.5)
 
     model.load_state_dict(state['state'])
     model.class_to_idx = state['class_to_idx']
