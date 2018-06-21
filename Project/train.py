@@ -23,7 +23,8 @@ def main():
     hidden_layers = get_hidden_layers(args.hidden_layers)
 
     # Replace the model classifier with our network
-    model.classifier = ClassifierModel(input_size, 102, hidden_layers, 0.5)
+    # 102 is the number of different flower category
+    model.classifier = ClassifierModel(input_size, 102, hidden_layers)
 
     # Checks if user wants to use GPU and if the system is capable to use it
     device = torch.device(
@@ -36,19 +37,27 @@ def main():
 
     # Save the model to the filesystem
     save_model(model, input_size, 102, hidden_layers, class_to_idx,
-               args.save_dir)
+               args.save_dir, args.arch)
 
 
 def read_args():
     """Reads command line arguments
+        7 command line arguments are created:
 
+        data_dir - Path to the data folder
+        save_dir - Path to the folder to save checkpoints
+        arch - A choice between different architectures of pretrained model
+        learning_rate - The value to use as the hyper-parameter learning rate
+        hidden_layers - The size(s) of the hidden layer(s). One value per
+                        wanted layer
+        epochs - Number of epochs to train the model
+        gpu - Flag that indicates if the GPU is to be used for the training
     Returns:
         data structure with the values passed as arguments
     """
 
     parser = argparse.ArgumentParser()  # creates the arguments parser
 
-    # Folder where the data is located
     parser.add_argument('data_dir', type=str, help='Path to the data folder')
 
     parser.add_argument('--save_dir', type=str, default='.',
@@ -143,6 +152,8 @@ def train_model(model, train_loader, valid_loader, learning_rate, device,
     step = 0
     for epoch in range(epochs):  # for each epoch
         running_loss = 0
+        print("Epoch: {}/{}".format(epoch+1, epochs))
+        print("==========")
         for inputs, labels in train_loader:  # for each batch of data / label
             step += 1
             inputs, labels = inputs.to(device), labels.to(device)
@@ -152,7 +163,7 @@ def train_model(model, train_loader, valid_loader, learning_rate, device,
             output = model.forward(inputs)  # feed forward
             loss = criterion(output, labels)  # calculate the loss
             loss.backward()  # back propagate the loss
-            optimizer.step()  # do gradient descent
+            optimizer.step()  # do gradient descent (update weights)
 
             running_loss += loss.item()
 
@@ -165,8 +176,7 @@ def train_model(model, train_loader, valid_loader, learning_rate, device,
                     valid_loss, accuracy = validate_model(model, valid_loader,
                                                           criterion, device)
 
-                print("Epoch: {}/{}.. ".format(epoch+1, epochs),
-                      "Training Loss: {:.3f}.. ".format(
+                print("Training Loss: {:.3f}.. ".format(
                           running_loss/print_every),
                       "Validation Loss: {:.3f}.. ".format(
                           valid_loss/len(valid_loader)),
@@ -195,7 +205,7 @@ def train_model(model, train_loader, valid_loader, learning_rate, device,
 
 
 def save_model(model, input_size, output_size, hidden_layers, class_to_idx,
-               save_dir):
+               save_dir, arch):
     """Saves the model state after training is complete
 
     Arguments:
@@ -217,7 +227,7 @@ def save_model(model, input_size, output_size, hidden_layers, class_to_idx,
         'state': model.state_dict()
     }
 
-    torch.save(trained_checkpoint, save_dir+'/trained_checkpoint.pth')
+    torch.save(trained_checkpoint, save_dir+'/'+arch+'_checkpoint.pth')
     print("Model was successfully saved!")
 
 

@@ -10,7 +10,7 @@ from torch import nn
 
 class ClassifierModel(nn.Module):  # Define the classifier network
 
-    def __init__(self, input_size, output_size, hidden_layers, drop_p):
+    def __init__(self, input_size, output_size, hidden_layers, drop_p=0.5):
         """Initialize the network
         Arguments:
             input_size -- number of neurons of the input layer
