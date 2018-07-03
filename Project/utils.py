@@ -118,16 +118,19 @@ def get_arch_model(arch):
         arch -- The model architecture to load
 
     Returns:
-        The model and the size of the output vector of the feature part
+        The model and the size of the output vector of the feature section
     """
 
     # Loads the pretrained model according with arch
+    feature_size = 0
     if arch == 'densenet':
         model = models.densenet161(pretrained=True)
         model_used = "Densenet-161"
+        feature_size = model.classifier.in_features
     else:
         model = models.vgg16(pretrained=True)
         model_used = "VGG-16"
+        feature_size = model.classifier[0].in_features
 
     print("Pretrained model that will be used is {}".format(model_used))
 
@@ -135,7 +138,7 @@ def get_arch_model(arch):
     for param in model.parameters():
         param.requires_grad = False
 
-    return model, model.classifier[0].in_features
+    return model, feature_size
 
 
 def get_hidden_layers(hidden_layers):

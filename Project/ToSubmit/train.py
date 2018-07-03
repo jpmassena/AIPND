@@ -179,11 +179,11 @@ def train_model(model, train_loader, valid_loader, learning_rate, device,
                                                           criterion, device)
 
                 print("Training Loss: {:.3f}.. ".format(
-                    running_loss/print_every),
-                    "Validation Loss: {:.3f}.. ".format(
-                    valid_loss/len(valid_loader)),
-                    "Validation Accuracy: {:.3f}".format(
-                    accuracy/len(valid_loader)))
+                          running_loss/print_every),
+                      "Validation Loss: {:.3f}.. ".format(
+                          valid_loss/len(valid_loader)),
+                      "Validation Accuracy: {:.3f}".format(
+                          accuracy/len(valid_loader)))
 
                 running_loss = 0
 

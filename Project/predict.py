@@ -82,7 +82,7 @@ def load_model(checkpoint, gpu):
         The recreated model with all the information that was saved
     """
 
-    if gpu:
+    if gpu and torch.cuda.is_available():
         state = torch.load(checkpoint)
     else:
         state = torch.load(checkpoint, map_location=lambda storage,

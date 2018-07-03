@@ -15,8 +15,7 @@ def main():
 
     args = read_args()  # Read command line arguments
 
-    # load the previously saved model
-    model = load_model(args.checkpoint, args.gpu)
+    model = load_model(args.checkpoint, args.gpu)  # load the previously saved model
 
     # Checks if user wants to use GPU and if the system is capable to use it
     device = torch.device(
@@ -81,11 +80,10 @@ def load_model(checkpoint, gpu):
     Returns:
         The recreated model with all the information that was saved
     """
-    if gpu:
+    if gpu and torch.cuda.is_available():
         state = torch.load(checkpoint)
     else:
-        state = torch.load(checkpoint, map_location=lambda storage,
-                           loc: storage)
+        state = torch.load(checkpoint, map_location=lambda storage, loc: storage)
 
     model, _ = get_arch_model('vgg')  # Load pretrained model
 

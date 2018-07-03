@@ -110,3 +110,4 @@ ENV/
 /Project/flowers
 /Project/trained_checkpoint.pth
 *.pth
+/Project/ToSubmit/jpmassena_project.zip
